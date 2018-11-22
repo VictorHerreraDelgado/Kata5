@@ -21,10 +21,24 @@ public class Kata5 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SelectApp app = new SelectApp();
-        app.connect();
-        app.selectAll();
-        // TODO code application logic here
+        try (Connection conn = DriverManager.getConnection(db());
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(createTableSQL());
+            System.out.println("Tabla creada");
+        } catch (SQLException e) {
+            System.out.println("XX");
+            System.out.println(e.getMessage());
+        } 
     }  
+
+    private static String createTableSQL() {
+        return "CREATE TABLE IF NOT EXISTS EMAIL (\n"
+            + " Id integer PRIMARY KEY AUTOINCREMENT,\n"
+            + " Mail text NOT NULL);";
+    }
+
+    private static String db() {
+        return "jdbc:sqlite:Kata5.db";
+    }
    
 }
